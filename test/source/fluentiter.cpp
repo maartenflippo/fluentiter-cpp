@@ -34,3 +34,13 @@ TEST_CASE("filter") {
     CHECK_EQ(4, *iter.next());
     CHECK_FALSE(iter.next().has_value());
 }
+
+TEST_CASE("reduce") {
+    auto reducer = [](auto acc, auto num) { return acc + num; };
+
+    std::vector<int> items{1, 2, 3, 4};
+    auto sum = fluentiter::FluentIter(items.begin(), items.end())
+            .reduce(reducer, 0);
+
+    CHECK_EQ(sum, 1 + 2 + 3 + 4);
+}

@@ -34,6 +34,21 @@ namespace fluentiter {
         FilterIterator<CurType, T, F> filter(F f) {
             return FilterIterator<CurType, T, F>(dynamic_cast<CurType&>(*this), f);
         }
+
+        template<typename U, typename F>
+        U reduce(F reducer, U initial_value) {
+            auto iter = dynamic_cast<CurType&>(*this);
+
+            auto value = iter.next();
+            auto acc = initial_value;
+
+            while (value) {
+                acc = reducer(acc, *value);
+                value = iter.next();
+            }
+
+            return acc;
+        }
     };
 
     template <class InputIt, typename T = typename std::iterator_traits<InputIt>::value_type>
