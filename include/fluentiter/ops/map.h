@@ -1,7 +1,5 @@
 #pragma once
 
-#include <concepts>
-
 namespace fluentiter {
     template<class Input, typename T>
     class Iterator;
