@@ -44,3 +44,16 @@ TEST_CASE("reduce") {
 
     CHECK_EQ(sum, 1 + 2 + 3 + 4);
 }
+
+TEST_CASE("collect") {
+    auto mapper = [](auto num) { return num + 1; };
+    auto predicate = [](auto num) { return num % 2 == 0; };
+
+    std::vector<int> items{1, 2, 3, 4};
+    auto result = fluentiter::FluentIter(items.begin(), items.end())
+            .map<int, decltype(mapper)>(mapper)
+            .filter(predicate)
+            .collect<fluentiter::VectorCollector<int>, std::vector<int>>();
+
+    CHECK_EQ(result, std::vector<int>{2, 4});
+}

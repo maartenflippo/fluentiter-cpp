@@ -5,6 +5,7 @@
 #include <optional>
 #include <functional>
 
+#include "collectors/vectorcollector.h"
 #include "ops/filter.h"
 #include "ops/map.h"
 
@@ -48,6 +49,12 @@ namespace fluentiter {
             }
 
             return acc;
+        }
+
+        template<class Collector, typename U>
+        U collect() {
+            Collector collector;
+            return collector.collect(dynamic_cast<CurType&>(*this));
         }
     };
 
