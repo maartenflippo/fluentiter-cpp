@@ -1,11 +1,15 @@
 #pragma once
 
+#include <concepts>
 #include <iterator>
 #include <optional>
+#include <functional>
+
+#include "ops/map.h"
 
 namespace fluentiter {
 
-    template <typename T>
+    template <class CurType, typename T>
     class Iterator {
     public:
         virtual ~Iterator() = default;
@@ -17,10 +21,17 @@ namespace fluentiter {
          * @return The current item, or an empty optional if the iterator ran out of items.
          */
         virtual std::optional<T> next() = 0;
+
+        template<typename U, typename F>
+        MapIterator<CurType, T, U, F> map(F f) {
+            MapIterator<CurType, T, U, F> new_iter(dynamic_cast<CurType&>(*this), f);
+
+            return new_iter;
+        }
     };
 
     template <class InputIt, typename T = typename std::iterator_traits<InputIt>::value_type>
-    class FluentIter final : public Iterator<T> {
+    class FluentIter final : public Iterator<FluentIter<InputIt, T>, T> {
     private:
         InputIt m_current;
         InputIt m_end;
