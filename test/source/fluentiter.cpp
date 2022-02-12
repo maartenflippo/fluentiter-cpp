@@ -12,7 +12,7 @@ TEST_CASE("FluentIter yields the items in an input iterator") {
     CHECK_FALSE(iter.next().has_value());
 }
 
-TEST_CASE("the map operation transforms each element once") {
+TEST_CASE("map") {
     auto mapper = [](auto num) { return num + 1; };
     std::vector<int> items{1, 3, 5};
     auto iter = fluentiter::FluentIter(items.begin(), items.end())
@@ -21,5 +21,16 @@ TEST_CASE("the map operation transforms each element once") {
     CHECK_EQ(2, *iter.next());
     CHECK_EQ(4, *iter.next());
     CHECK_EQ(6, *iter.next());
+    CHECK_FALSE(iter.next().has_value());
+}
+
+TEST_CASE("filter") {
+    auto predicate = [](auto num) { return num % 2 == 0; };
+    std::vector<int> items{1, 2, 3, 4};
+    auto iter = fluentiter::FluentIter(items.begin(), items.end())
+            .filter(predicate);
+
+    CHECK_EQ(2, *iter.next());
+    CHECK_EQ(4, *iter.next());
     CHECK_FALSE(iter.next().has_value());
 }

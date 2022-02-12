@@ -5,6 +5,7 @@
 #include <optional>
 #include <functional>
 
+#include "ops/filter.h"
 #include "ops/map.h"
 
 namespace fluentiter {
@@ -27,6 +28,11 @@ namespace fluentiter {
             MapIterator<CurType, T, U, F> new_iter(dynamic_cast<CurType&>(*this), f);
 
             return new_iter;
+        }
+
+        template<typename F>
+        FilterIterator<CurType, T, F> filter(F f) {
+            return FilterIterator<CurType, T, F>(dynamic_cast<CurType&>(*this), f);
         }
     };
 
