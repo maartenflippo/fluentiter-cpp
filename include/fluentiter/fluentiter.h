@@ -23,17 +23,15 @@ namespace fluentiter {
     virtual std::optional<T> next() = 0;
 
     template <typename U, typename F> MapIterator<CurType, T, U, F> map(F f) {
-      MapIterator<CurType, T, U, F> new_iter(dynamic_cast<CurType&>(*this), f);
-
-      return new_iter;
+      return MapIterator<CurType, T, U, F>(static_cast<CurType&>(*this), f);
     }
 
     template <typename F> FilterIterator<CurType, T, F> filter(F f) {
-      return FilterIterator<CurType, T, F>(dynamic_cast<CurType&>(*this), f);
+      return FilterIterator<CurType, T, F>(static_cast<CurType&>(*this), f);
     }
 
     template <typename U, typename F> U reduce(F reducer, U initial_value) {
-      auto iter = dynamic_cast<CurType&>(*this);
+      auto iter = static_cast<CurType&>(*this);
 
       auto value = iter.next();
       auto acc = initial_value;
@@ -48,7 +46,7 @@ namespace fluentiter {
 
     template <class Collector, typename U> U collect() {
       Collector collector;
-      return collector.collect(dynamic_cast<CurType&>(*this));
+      return collector.collect(static_cast<CurType&>(*this));
     }
   };
 
