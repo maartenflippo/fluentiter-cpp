@@ -16,7 +16,7 @@ TEST_CASE("FluentIter yields the items in an input iterator") {
 TEST_CASE("map") {
   auto mapper = [](auto num) { return num + 1; };
   std::vector<int> items{1, 3, 5};
-  auto iter = fluentiter::FluentIter(items.begin(), items.end()).map<int, decltype(mapper)>(mapper);
+  auto iter = fluentiter::FluentIter(items.begin(), items.end()).map(mapper);
 
   CHECK_EQ(2, *iter.next());
   CHECK_EQ(4, *iter.next());
@@ -49,7 +49,7 @@ TEST_CASE("collect") {
 
   std::vector<int> items{1, 2, 3, 4};
   auto result = fluentiter::FluentIter(items.begin(), items.end())
-                    .map<int, decltype(mapper)>(mapper)
+                    .map(mapper)
                     .filter(predicate)
                     .collect<fluentiter::VectorCollector<int>, std::vector<int>>();
 

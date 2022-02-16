@@ -22,7 +22,7 @@ namespace fluentiter {
      */
     virtual std::optional<T> next() = 0;
 
-    template <typename U, typename F> MapIterator<CurType, T, U, F> map(F f) {
+    template <typename F, typename U = std::invoke_result_t<F, T>> MapIterator<CurType, T, U, F> map(F f) {
       return MapIterator<CurType, T, U, F>(static_cast<CurType&>(*this), f);
     }
 
