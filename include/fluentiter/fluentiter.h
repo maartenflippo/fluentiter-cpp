@@ -26,7 +26,8 @@ namespace fluentiter {
       return std::make_pair<size_t, std::optional<size_t>>(0, {});
     }
 
-    template <typename F, typename U = std::invoke_result_t<F, T>> MapIterator<CurType, T, U, F> map(F f) {
+    template <typename F, typename U = std::invoke_result_t<F, T>>
+    MapIterator<CurType, T, U, F> map(F f) {
       return MapIterator<CurType, T, U, F>(static_cast<CurType&>(*this), f);
     }
 
@@ -62,7 +63,8 @@ namespace fluentiter {
     size_t m_size;
 
   public:
-    FluentIter(InputIt current, InputIt end, size_t size) : m_current(current), m_end(end), m_size(size) {}
+    FluentIter(InputIt current, InputIt end, size_t size)
+        : m_current(current), m_end(end), m_size(size) {}
 
     std::optional<T> next() override {
       if (m_current == m_end) return {};

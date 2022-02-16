@@ -19,8 +19,6 @@ namespace fluentiter {
       return m_f(*value);
     }
 
-    std::pair<size_t, std::optional<size_t>> size_hint() override {
-      return m_iter.size_hint();
-    }
+    std::pair<size_t, std::optional<size_t>> size_hint() override { return m_iter.size_hint(); }
   };
 }  // namespace fluentiter
