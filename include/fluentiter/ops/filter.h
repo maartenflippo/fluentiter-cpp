@@ -18,5 +18,10 @@ namespace fluentiter {
 
       return m_predicate(*value) ? value : next();
     }
+
+    std::pair<size_t, std::optional<size_t>> size_hint() override {
+      auto [lb, ub] = m_input.size_hint();
+      return std::make_pair(0, ub);
+    }
   };
 }  // namespace fluentiter
