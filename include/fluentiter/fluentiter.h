@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <functional>
 #include <iterator>
 #include <optional>
@@ -10,8 +11,27 @@
 
 namespace fluentiter {
 
+  template <typename F, typename In, typename Out>
+  concept MapOperation = std::is_same_v<Out, std::invoke_result_t<F, In>>;
+
+  template <typename F, typename In>
+  concept FilterOperation = std::is_same_v<bool, std::invoke_result_t<F, In>>;
+
+  template <typename F, typename Acc, typename T>
+  concept ReducerOperation = std::is_same_v<Acc, std::invoke_result_t<F, Acc, T>>;
+
+  // clang-format off
+  template <typename C, typename Out, typename Iter, typename T>
+  concept Collector = std::is_trivially_constructible_v<C>
+      && std::is_base_of_v<Iterator<Iter, T>, Iter>
+      && requires(C c, Iter& iter) { std::is_same_v<Out, decltype(c.collect(iter))>; };
+  // clang-format on
+
   template <class CurType, typename T> class Iterator {
   public:
+    Iterator() = default;
+    Iterator(Iterator&) = delete;
+    Iterator(Iterator&&) noexcept = default;
     virtual ~Iterator() = default;
 
     /**
@@ -27,30 +47,31 @@ namespace fluentiter {
     }
 
     template <typename F, typename U = std::invoke_result_t<F, T>>
-    MapIterator<CurType, T, U, F> map(F f) {
+    requires MapOperation<F, T, U> MapIterator<CurType, T, U, F> map(F f) {
       return MapIterator<CurType, T, U, F>(static_cast<CurType&>(*this), f);
     }
 
-    template <typename F> FilterIterator<CurType, T, F> filter(F f) {
+    template <typename F>
+    requires FilterOperation<F, T> FilterIterator<CurType, T, F> filter(F f) {
       return FilterIterator<CurType, T, F>(static_cast<CurType&>(*this), f);
     }
 
-    template <typename U, typename F> U reduce(F reducer, U initial_value) {
-      auto iter = static_cast<CurType&>(*this);
-
-      auto value = iter.next();
+    template <typename U, typename F>
+    requires ReducerOperation<F, U, T> U reduce(F reducer, U initial_value) {
+      auto value = next();
       auto acc = initial_value;
 
       while (value) {
         acc = reducer(acc, *value);
-        value = iter.next();
+        value = next();
       }
 
       return acc;
     }
 
-    template <class Collector, typename U> U collect() {
-      Collector collector;
+    template <class C, typename U>
+    requires Collector<C, U, CurType, T> U collect() {
+      C collector;
       return collector.collect(static_cast<CurType&>(*this));
     }
   };
