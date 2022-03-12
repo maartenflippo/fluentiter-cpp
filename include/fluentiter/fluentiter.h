@@ -8,6 +8,7 @@
 #include "collectors/vectorcollector.h"
 #include "ops/filter.h"
 #include "ops/map.h"
+#include "ops/zip.h"
 
 namespace fluentiter {
 
@@ -34,6 +35,8 @@ namespace fluentiter {
     Iterator(Iterator&&) noexcept = default;
     virtual ~Iterator() = default;
 
+    Iterator<CurType, T>& operator= (Iterator<CurType, T>&&) noexcept = default;
+
     /**
      * Get the current item and advance the iterator. If has_next() is true, then this will return
      * the current item, otherwise an empty optional.
@@ -54,6 +57,11 @@ namespace fluentiter {
     template <typename F>
     requires FilterOperation<F, T> FilterIterator<CurType, T, F> filter(F f) {
       return FilterIterator<CurType, T, F>(static_cast<CurType&>(*this), f);
+    }
+
+    template <typename Other, typename U> requires std::is_base_of_v<Iterator<Other, U>, Other>
+    ZipIterator<CurType, T, Other, U> zip(Other&& other) {
+      return ZipIterator<CurType, T, Other, U>(static_cast<CurType&>(*this), other);
     }
 
     template <typename U, typename F>

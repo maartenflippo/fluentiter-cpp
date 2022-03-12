@@ -34,6 +34,21 @@ TEST_CASE("filter") {
   CHECK_FALSE(iter.next().has_value());
 }
 
+TEST_CASE("zip") {
+  std::vector<int> nums{1, 2, 3};
+  std::vector<char> chars{'a', 'b', 'c'};
+
+  fluentiter::FluentIter iter1(nums.begin(), nums.end(), nums.size());
+  fluentiter::FluentIter iter2(chars.begin(), chars.end(), chars.size());
+
+  auto iter = iter1.zip<decltype(iter2), char>(std::move(iter2));
+
+  CHECK_EQ(std::make_pair(1, 'a'), *iter.next());
+  CHECK_EQ(std::make_pair(2, 'b'), *iter.next());
+  CHECK_EQ(std::make_pair(3, 'c'), *iter.next());
+  CHECK_FALSE(iter.next().has_value());
+}
+
 TEST_CASE("reduce") {
   auto reducer = [](auto acc, auto num) { return acc + num; };
 
