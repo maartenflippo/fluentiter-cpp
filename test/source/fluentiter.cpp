@@ -103,6 +103,22 @@ TEST_CASE("all is false if some element is false") {
   CHECK_FALSE(fluentiter::from(items.begin(), items.end()).all());
 }
 
+TEST_CASE("min returns the smallest element in the iterator") {
+  std::vector<int> items{1, 2, 4, -4};
+  CHECK_EQ(fluentiter::from(items.begin(), items.end()).min(), -4);
+}
+
+TEST_CASE("max returns the largest element in the iterator") {
+  std::vector<int> items{1, 2, 4, -4};
+  CHECK_EQ(fluentiter::from(items.begin(), items.end()).max(), 4);
+}
+
+TEST_CASE("min and max return max and min limits of the element type") {
+  std::vector<int> items{};
+  CHECK_EQ(fluentiter::from(items.begin(), items.end()).max(), std::numeric_limits<int>::min());
+  CHECK_EQ(fluentiter::from(items.begin(), items.end()).min(), std::numeric_limits<int>::max());
+}
+
 TEST_CASE("collect") {
   auto mapper = [](auto num) { return num + 1; };
   auto predicate = [](auto num) { return num % 2 == 0; };
