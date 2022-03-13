@@ -73,6 +73,21 @@ TEST_CASE("any is false if no element is true") {
   CHECK_FALSE(fluentiter::from(items.begin(), items.end()).any());
 }
 
+TEST_CASE("empty iterator means all returns true") {
+  std::vector<bool> items{};
+  CHECK(fluentiter::from(items.begin(), items.end()).all());
+}
+
+TEST_CASE("all is true if all elements are true") {
+  std::vector<bool> items{true, true, true};
+  CHECK(fluentiter::from(items.begin(), items.end()).all());
+}
+
+TEST_CASE("all is false if some element is false") {
+  std::vector<bool> items{true, false, true, true};
+  CHECK_FALSE(fluentiter::from(items.begin(), items.end()).all());
+}
+
 TEST_CASE("collect") {
   auto mapper = [](auto num) { return num + 1; };
   auto predicate = [](auto num) { return num % 2 == 0; };
