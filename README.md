@@ -10,6 +10,18 @@ A fluent API around iterators, inspired by [Rust's iterators](https://doc.rust-l
 
 ## Contributing
 
+### Cloning the repository
+Clone the repository by running:
+```sh
+git clone https://github.com/maartenflippo/fluentiter-cpp
+```
+
+To ensure a consistent code style, the [CMakeLists](./CMakeLists.txt) file defines a `fix-format` target. Run the
+following command to format the code according to the style before committing changes:
+```sh
+cp hooks/pre-commit .git/hooks/pre-commit
+```
+
 ### Build and run test suite
 
 Use the following commands from the project's root directory to run the test suite.

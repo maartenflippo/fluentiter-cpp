@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo $PWD
+
+# Format the code.
+cmake --build build --target fix-format
