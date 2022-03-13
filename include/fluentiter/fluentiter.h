@@ -38,8 +38,7 @@ namespace fluentiter {
     Iterator<CurType, T>& operator=(Iterator<CurType, T>&&) noexcept = default;
 
     /**
-     * Get the current item and advance the iterator. If has_next() is true, then this will return
-     * the current item, otherwise an empty optional.
+     * Get the current item and advance the iterator.
      *
      * @return The current item, or an empty optional if the iterator ran out of items.
      */
