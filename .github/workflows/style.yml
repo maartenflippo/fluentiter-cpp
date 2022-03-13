@@ -30,14 +30,19 @@ jobs:
           brew install clang-format
           pip3 install cmake_format==0.6.11 pyyaml
 
+      - name: install GCC 11
+        run: |
+          sudo apt update
+          sudo apt install gcc-11 g++-11
+
       - name: configure
         run: cmake -Stest -Bbuild
         env:
-          CC: gcc-10
-          CXX: g++-10
+          CC: gcc-11
+          CXX: g++-11
 
       - name: check style
         run: cmake --build build --target check-format
         env:
-          CC: gcc-10
-          CXX: g++-10
+          CC: gcc-11
+          CXX: g++-11
