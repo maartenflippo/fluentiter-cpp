@@ -119,6 +119,14 @@ TEST_CASE("min and max return max and min limits of the element type") {
   CHECK_EQ(fluentiter::from(items.begin(), items.end()).min(), std::numeric_limits<int>::max());
 }
 
+TEST_CASE("nth(i) returns the i-th element (zero based)") {
+  std::vector<int> items{1, 2, 4, -4};
+
+  auto iter = fluentiter::from(items.begin(), items.end());
+  CHECK_EQ(iter.nth(2), 4);
+  CHECK_EQ(iter.next(), -4);
+}
+
 TEST_CASE("collect") {
   auto mapper = [](auto num) { return num + 1; };
   auto predicate = [](auto num) { return num % 2 == 0; };

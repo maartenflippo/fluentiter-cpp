@@ -140,6 +140,17 @@ namespace fluentiter {
                     std::numeric_limits<T>::min());
     }
 
+    std::optional<T> nth(size_t idx) {
+      auto value = next();
+
+      while (idx > 0 && value) {
+        value = next();
+        idx--;
+      }
+
+      return value;
+    }
+
     /**
      * Collect the values in the iterator into some container.
      *
