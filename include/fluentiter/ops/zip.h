@@ -23,8 +23,6 @@ namespace fluentiter {
       return std::make_pair(*value1, *value2);
     }
 
-    std::pair<size_t, std::optional<size_t>> size_hint() override {
-      return m_input1.size_hint();
-    }
+    std::pair<size_t, std::optional<size_t>> size_hint() override { return m_input1.size_hint(); }
   };
 }  // namespace fluentiter
