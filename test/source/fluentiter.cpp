@@ -127,6 +127,14 @@ TEST_CASE("nth(i) returns the i-th element (zero based)") {
   CHECK_EQ(iter.next(), -4);
 }
 
+TEST_CASE("count returns the length of the iterator by consuming it") {
+  std::vector<int> items{1, 2, 4, -4};
+
+  auto iter = fluentiter::from(items.begin(), items.end());
+  CHECK_EQ(iter.count(), 4);
+  CHECK_FALSE(iter.next());
+}
+
 TEST_CASE("collect") {
   auto mapper = [](auto num) { return num + 1; };
   auto predicate = [](auto num) { return num % 2 == 0; };
