@@ -30,12 +30,7 @@ namespace fluentiter {
 
   template <class CurType, typename T> class Iterator {
   public:
-    Iterator() = default;
-    Iterator(Iterator&) = delete;
-    Iterator(Iterator&&) noexcept = default;
     virtual ~Iterator() = default;
-
-    Iterator<CurType, T>& operator=(Iterator<CurType, T>&&) noexcept = default;
 
     /**
      * Get the current item and advance the iterator.
@@ -158,5 +153,10 @@ namespace fluentiter {
       return std::make_pair(m_size, m_size);
     }
   };
+
+  template <typename Iter>
+  requires std::is_same_v<typename std::iterator_traits<Iter>::iterator_category,
+                          std::random_access_iterator_tag>
+  inline FluentIter<Iter> from(Iter begin, Iter end) { return FluentIter(begin, end, end - begin); }
 
 }  // namespace fluentiter
