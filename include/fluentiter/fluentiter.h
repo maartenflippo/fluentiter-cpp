@@ -115,6 +115,11 @@ namespace fluentiter {
       return acc;
     }
 
+    template<class Q = T>
+    typename std::enable_if<std::is_same<Q, bool>::value, bool>::type any() {
+      return reduce([](auto acc, auto elem) { return acc || elem; }, false);
+    }
+
     /**
      * Collect the values in the iterator into some container.
      *
