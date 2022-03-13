@@ -35,7 +35,7 @@ namespace fluentiter {
     Iterator(Iterator&&) noexcept = default;
     virtual ~Iterator() = default;
 
-    Iterator<CurType, T>& operator= (Iterator<CurType, T>&&) noexcept = default;
+    Iterator<CurType, T>& operator=(Iterator<CurType, T>&&) noexcept = default;
 
     /**
      * Get the current item and advance the iterator. If has_next() is true, then this will return
@@ -45,25 +45,70 @@ namespace fluentiter {
      */
     virtual std::optional<T> next() = 0;
 
+    /**
+     * Returns the bounds on the remaining length of the iterator. The first component of the pair
+     * is the lower bound of the remaining length, and the second component is the upper bound of
+     * the remaining length.
+     *
+     * Since there exist operators such as filter() that alter the remaining length of the iterator,
+     * the actual length cannot be known in advance. Hence, this only serves as a hint. The iterator
+     * is guaranteed not to produce more values than the hinted upper bound, or produce less values
+     * than the indicated lower bound.
+     *
+     * @return The bounds on the remaining length of the iterator.
+     */
     virtual std::pair<size_t, std::optional<size_t>> size_hint() {
       return std::make_pair<size_t, std::optional<size_t>>(0, {});
     }
 
+    /**
+     * Applies the function @p f to every element in the iterator.
+     *
+     * @tparam F The type of the function being applied to every element.
+     * @tparam U The type of the return value of the mapper function.
+     * @return An iterator whose values are the result of the function @p f applied to each element.
+     */
     template <typename F, typename U = std::invoke_result_t<F, T>>
     requires MapOperation<F, T, U> MapIterator<CurType, T, U, F> map(F f) {
       return MapIterator<CurType, T, U, F>(static_cast<CurType&>(*this), f);
     }
 
+    /**
+     * Filters out the values which don't satisfy the predicate @p f.
+     *
+     * @tparam F The type of the predicate.
+     * @param f The predicate to test the elements.
+     * @return An iterator whose values pass the predicate @p f.
+     */
     template <typename F>
     requires FilterOperation<F, T> FilterIterator<CurType, T, F> filter(F f) {
       return FilterIterator<CurType, T, F>(static_cast<CurType&>(*this), f);
     }
 
-    template <typename Other, typename U> requires std::is_base_of_v<Iterator<Other, U>, Other>
-    ZipIterator<CurType, T, Other, U> zip(Other&& other) {
+    /**
+     * Combines two iterators by pairing up the elements of the current iterator and @p other.
+     *
+     * @tparam Other The type of other iterator.
+     * @tparam U The type of the elements in @p other.
+     * @param other The other iterator.
+     * @return An iterator which produces pairs of the elements in the current iterator and @p
+     * other.
+     */
+    template <typename Other, typename U>
+    requires std::is_base_of_v<Iterator<Other, U>, Other> ZipIterator<CurType, T, Other, U> zip(
+        Other&& other) {
       return ZipIterator<CurType, T, Other, U>(static_cast<CurType&>(*this), other);
     }
 
+    /**
+     * Reduce the values in this iterator to a single value.
+     *
+     * @tparam U The type of the value to reduce to, also known as the accumulator.
+     * @tparam F The type of the reducer function.
+     * @param reducer The reducer to apply to each element.
+     * @param initial_value The initial value of the accumulator.
+     * @return The accumulator after @p reducer has been applied to all elements in the iterator.
+     */
     template <typename U, typename F>
     requires ReducerOperation<F, U, T> U reduce(F reducer, U initial_value) {
       auto value = next();
@@ -77,6 +122,13 @@ namespace fluentiter {
       return acc;
     }
 
+    /**
+     * Collect the values in the iterator into some container.
+     *
+     * @tparam C The type of the collector.
+     * @tparam U The type of the container.
+     * @return The container with all the values collected into it.
+     */
     template <class C, typename U>
     requires Collector<C, U, CurType, T> U collect() {
       C collector;
