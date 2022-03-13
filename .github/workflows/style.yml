@@ -17,7 +17,7 @@ env:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +29,8 @@ jobs:
 
       - name: Install format dependencies
         run: |
-          brew install clang-format
+          sudo apt update
+          sudo apt install clang-format
           pip3 install cmake_format==0.6.11 pyyaml
 
       - name: install GCC 11
