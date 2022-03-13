@@ -12,6 +12,8 @@ on:
 
 env:
   CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm_modules
+  CC: gcc-11
+  CXX: g++-11
 
 jobs:
   build:
@@ -37,12 +39,6 @@ jobs:
 
       - name: configure
         run: cmake -Stest -Bbuild
-        env:
-          CC: gcc-11
-          CXX: g++-11
 
       - name: check style
         run: cmake --build build --target check-format
-        env:
-          CC: gcc-11
-          CXX: g++-11

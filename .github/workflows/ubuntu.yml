@@ -14,6 +14,8 @@ env:
   CTEST_OUTPUT_ON_FAILURE: 1
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm_modules
+  CC: gcc-11
+  CXX: g++-11
 
 jobs:
   build:
@@ -37,9 +39,6 @@ jobs:
 
       - name: build
         run: cmake --build build -j4
-        env:
-          CC: gcc-11
-          CXX: g++-11
 
       - name: test
         run: |

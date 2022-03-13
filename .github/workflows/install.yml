@@ -36,21 +36,12 @@ jobs:
           cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
           sudo cmake --build build --target install
           rm -rf build
-        env:
-          CC: gcc-11
-          CXX: g++-11
 
       - name: configure
         run: cmake -Stest -Bbuild -DTEST_INSTALLED_VERSION=1
-        env:
-          CC: gcc-11
-          CXX: g++-11
 
       - name: build
         run: cmake --build build --config Debug -j4
-        env:
-          CC: gcc-11
-          CXX: g++-11
 
       - name: test
         run: |
