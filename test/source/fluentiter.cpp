@@ -73,6 +73,21 @@ TEST_CASE("any is false if no element is true") {
   CHECK_FALSE(fluentiter::from(items.begin(), items.end()).any());
 }
 
+TEST_CASE("empty iterator means none returns true") {
+  std::vector<bool> items{};
+  CHECK(fluentiter::from(items.begin(), items.end()).none());
+}
+
+TEST_CASE("none is false if some element is true") {
+  std::vector<bool> items{false, false, true, false};
+  CHECK_FALSE(fluentiter::from(items.begin(), items.end()).none());
+}
+
+TEST_CASE("none is true if no element is true") {
+  std::vector<bool> items{false, false, false, false};
+  CHECK(fluentiter::from(items.begin(), items.end()).none());
+}
+
 TEST_CASE("empty iterator means all returns true") {
   std::vector<bool> items{};
   CHECK(fluentiter::from(items.begin(), items.end()).all());
