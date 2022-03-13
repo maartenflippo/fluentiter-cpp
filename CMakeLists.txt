@@ -36,7 +36,14 @@ file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include
 add_library(${PROJECT_NAME} INTERFACE)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
-target_compile_options(${PROJECT_NAME} INTERFACE -fconcepts)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  target_compile_options(${PROJECT_NAME} INTERFACE -fconcepts)
+elseif(MSVC)
+  target_compile_options(${PROJECT_NAME} INTERFACE /std:c++20)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(${PROJECT_NAME} INTERFACE -std=c++20)
+endif()
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} INTERFACE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
