@@ -13,6 +13,8 @@
 
 namespace fluentiter {
 
+  // TODO: Clang format for concepts seems a bit broken, or the config is not correct.
+  // clang-format off
   template <typename F, typename In, typename Out>
   concept MapOperation = std::is_same_v<Out, std::invoke_result_t<F, In>>;
 
@@ -22,7 +24,6 @@ namespace fluentiter {
   template <typename F, typename Acc, typename T>
   concept ReducerOperation = std::is_same_v<Acc, std::invoke_result_t<F, Acc, T>>;
 
-  // clang-format off
   template <typename C, typename Out, typename Iter, typename T>
   concept Collector = std::is_trivially_constructible_v<C>
       && std::is_base_of_v<Iterator<Iter, T>, Iter>
@@ -75,8 +76,7 @@ namespace fluentiter {
      * @param f The predicate to test the elements.
      * @return An iterator whose values pass the predicate @p f.
      */
-    template <typename F>
-    requires FilterOperation<F, T> FilterIterator<CurType, T, F> filter(F f) {
+    template <typename F> requires FilterOperation<F, T> FilterIterator<CurType, T, F> filter(F f) {
       return FilterIterator<CurType, T, F>(static_cast<CurType&>(*this), f);
     }
 
@@ -162,8 +162,7 @@ namespace fluentiter {
      * @tparam U The type of the container.
      * @return The container with all the values collected into it.
      */
-    template <class C, typename U>
-    requires Collector<C, U, CurType, T> U collect() {
+    template <class C, typename U> requires Collector<C, U, CurType, T> U collect() {
       C collector;
       return collector.collect(static_cast<CurType&>(*this));
     }
@@ -193,9 +192,14 @@ namespace fluentiter {
     }
   };
 
+  // TODO: Fix the formatting for this in the clang-format configuration.
+  // clang-format off
   template <typename Iter>
   requires std::is_same_v<typename std::iterator_traits<Iter>::iterator_category,
                           std::random_access_iterator_tag>
-  inline FluentIter<Iter> from(Iter begin, Iter end) { return FluentIter(begin, end, end - begin); }
+  inline FluentIter<Iter> from(Iter begin, Iter end) {
+    return FluentIter(begin, end, end - begin);
+  }
+  // clang-format on
 
 }  // namespace fluentiter
