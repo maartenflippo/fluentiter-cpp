@@ -7,6 +7,28 @@
 # FluentIter CPP
 
 A fluent API around iterators, inspired by [Rust's iterators](https://doc.rust-lang.org/std/iter/trait.Iterator.html).
+This repository gives a good project to work with C++ templates, C++20 concepts, and explore compare some performance 
+differences between ranged loops, the STL algorithms and this implementation.
+
+## Benchmarks
+Here we can see some benchmarks of this style of iterator. I intend to expand upon them in the future. These results
+are obtained using the `CMAKE_BUILD_TYPE=Release` build type.
+
+```
+Run on (8 X 2592 MHz CPU s)
+CPU Caches:
+  L1 Data 32 KiB (x4)
+  L1 Instruction 32 KiB (x4)
+  L2 Unified 256 KiB (x4)
+  L3 Unified 6144 KiB (x1)
+Load Average: 0.21, 0.06, 0.02
+-----------------------------------------------------------------
+Benchmark                       Time             CPU   Iterations
+-----------------------------------------------------------------
+BM_map_ranged_for_loop       1074 ns         1074 ns       642052
+BM_Map_std_transform         1026 ns         1026 ns       719025
+BM_Map_fluent_iter           1971 ns         1971 ns       357823
+```
 
 ## Contributing
 
@@ -53,10 +75,6 @@ cmake --build build/test --target fix-format
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
 
 ### Build the documentation
-
-The documentation is automatically built and [published](https://thelartians.github.io/ModernCppStarter) whenever a [GitHub Release](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository) is created.
-To manually build documentation, call the following command.
-
 ```bash
 cmake -S documentation -B build/doc
 cmake --build build/doc --target GenerateDocs
