@@ -1,8 +1,5 @@
-[![Actions Status](https://github.com/maartenflippo/fluentiter-cpp/workflows/MacOS/badge.svg)](https://github.com/maartenflippo/fluentiter-cpp/actions)
-[![Actions Status](https://github.com/maartenflippo/fluentiter-cpp/workflows/Windows/badge.svg)](https://github.com/maartenflippo/fluentiter-cpp/actions)
 [![Actions Status](https://github.com/maartenflippo/fluentiter-cpp/workflows/Ubuntu/badge.svg)](https://github.com/maartenflippo/fluentiter-cpp/actions)
 [![Actions Status](https://github.com/maartenflippo/fluentiter-cpp/workflows/Style/badge.svg)](https://github.com/maartenflippo/fluentiter-cpp/actions)
-[![Actions Status](https://github.com/maartenflippo/fluentiter-cpp/workflows/Install/badge.svg)](https://github.com/maartenflippo/fluentiter-cpp/actions)
 
 # FluentIter CPP
 
